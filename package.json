@@ -1,0 +1,41 @@
+{
+  "name": "bdu-accounts",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbo -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/react-csv": "^1.1.10",
+    "axios": "^1.7.2",
+    "crypto-js": "^4.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.4.1",
+    "mysql2": "^3.10.0",
+    "next": "14.2.4",
+    "next-auth": "^4.24.7",
+    "react": "^18",
+    "react-csv": "^2.2.2",
+    "react-dom": "^18",
+    "react-icons": "^5.2.1",
+    "react-toastify": "^10.0.5",
+    "sass": "^1.77.5",
+    "swr": "^2.2.5",
+    "use-debounce": "^10.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.4",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

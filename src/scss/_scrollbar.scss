@@ -1,0 +1,27 @@
+@layer utilities {
+  .noScrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .noScrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .hideScrollbar {
+    /* For Webkit (Chrome, Safari) */
+    &::-webkit-scrollbar {
+      width: auto;
+    }
+    /* For Firefox */
+    * {
+      scrollbar-width: auto; /* "thin" or "auto" can be used */
+    }
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+    }
+  }
+}
