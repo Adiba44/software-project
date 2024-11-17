@@ -1,0 +1,161 @@
+"use client";
+import { useEffect, useMemo, useRef } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import Console from "@/utils/console";
+import { useSWR } from "@/utils/api-handler/swr";
+import GoogleIcons from "@/components/icons/GoogleIcons";
+import { searchKeywordMatched } from "@/utils/more";
+import { formDataType } from "./CreateUserModal";
+import api from "@/app/api/endpoints";
+
+export default function SelectSession({
+  formData,
+  setFormData,
+}: {
+  formData: formDataType;
+  setFormData: Dispatch<SetStateAction<formDataType | undefined>>;
+}) {
+  return useMemo(
+    () => (
+      <_SelectSession session={formData.session} setFormData={setFormData} />
+    ),
+    [formData.session, setFormData]
+  );
+}
+
+function _SelectSession({
+  session,
+  setFormData,
+}: {
+  session: { id: number; value: string };
+  setFormData: Dispatch<SetStateAction<formDataType | undefined>>;
+}) {
+  Console.component("SelectSession");
+
+  const [data, setData] = useState<
+    | undefined
+    | {
+        id: number;
+        session: string;
+      }[]
+  >(undefined);
+  let isSearching = false;
+  const [isApear, setIsApear] = useState<boolean>(false);
+  const [searchKey, setSearchKey] = useState<string>("");
+  const inputID = useRef<HTMLInputElement>(null);
+
+  // Get session data
+  const [res] = useSWR(api.readAllSession);
+  useEffect(() => {
+    if (!res) return;
+    if (res.status === 200) {
+      const data = res.data;
+      setData(data);
+      /*
+      // Set the first value
+      setFormData((prev) => ({
+        ...prev,
+        session: { id: data[0].id, value: data[0].session },
+      }));
+      */
+    }
+  }, [res, setData, setFormData]);
+
+  function doApear() {
+    setIsApear(true);
+    setTimeout(() => {
+      if (isApear === false) setIsApear(true);
+    }, 300);
+  }
+  function doDisapear() {
+    setTimeout(() => {
+      if (isSearching === false) {
+        setIsApear(false);
+        setSearchKey("");
+      }
+    }, 300);
+  }
+
+  function updateValue(obj: { id: number; value: string }) {
+    setFormData(
+      (prev) =>
+        prev && {
+          ...prev,
+          session: obj,
+        }
+    );
+    setIsApear(false);
+  }
+
+  let recordFound: boolean = false;
+
+  return (
+    <div className="relative flex-1">
+      {/* Click Section */}
+      <div className="textField caretNone">
+        <input
+          type="text"
+          required
+          ref={inputID}
+          value={session.value}
+          onChange={() => {}}
+          onFocus={doApear}
+          onBlur={doDisapear}
+          autoComplete="off"
+          spellCheck={false}
+        />
+        <label>Session</label>
+      </div>
+
+      {/* Apear-Disapear section */}
+      {isApear && (
+        <div
+          className="w-full max-h-[250px] py-2 absolute top-[50px] overflow-y-auto bg-white dark:bgBlack boxShadowMenu z-1"
+          onMouseLeave={() => {
+            inputID.current?.focus();
+          }}
+        >
+          {/* Search bar */}
+          <div className="mx-4 mt-2 mb-3 px-2 flex items-center gap-1 border border-gray-300 rounded-lg">
+            <GoogleIcons.search className="fill-gray-500" />
+            <div className="flex-1">
+              <input
+                type="text"
+                className="w-full px-1 py-2"
+                placeholder="Search"
+                spellCheck={false}
+                onFocus={() => (isSearching = true)}
+                onBlur={() => (isSearching = false)}
+                value={searchKey}
+                onChange={(e) => setSearchKey(e.target.value)}
+              />
+            </div>
+          </div>
+          {data === undefined ? (
+            <div className="px-4 py-3">Loading...</div>
+          ) : (
+            data.map((record: any, index: number) => {
+              if (searchKeywordMatched(record.session, searchKey) === false)
+                return;
+              recordFound = true;
+              return (
+                <div
+                  key={index}
+                  className="px-4 py-2 cursor-pointer hover:bgLightBlue dark:hover:bgBlack3"
+                  onClick={() =>
+                    updateValue({ id: record.id, value: record.session })
+                  }
+                >
+                  {record.session}
+                </div>
+              );
+            })
+          )}
+          {data && recordFound == false && (
+            <div className="px-4 py-3">No record found</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
