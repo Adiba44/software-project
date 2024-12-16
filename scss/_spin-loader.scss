@@ -1,0 +1,65 @@
+/*****
+ * Spin preloader type 1
+ * Google's used blue spin preloader design
+ ******/
+.spinLoader {
+  .loader {
+    width: 34px;
+    height: 34px;
+    padding: 4px;
+    border-radius: 100%;
+    flex-shrink: 0;
+  }
+  .circularLoader {
+    animation: spinPreloaderRotate 0.5s linear infinite;
+  }
+  .loaderPath {
+    stroke: $blue;
+    fill: none;
+    stroke-width: 5px;
+    animation: animateStroke 3s ease-in-out infinite;
+    stroke-linecap: round;
+  }
+} //.spinLoader
+
+@keyframes spinPreloaderRotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes animateStroke {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    // stroke: red;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35;
+    // stroke: $blue;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124;
+    // stroke: green;
+  }
+}
+
+/*****
+ * Spin loader type 2
+ ******/
+.spinLoader2 {
+  width: 30px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(farthest-side, $blue 94%, #0000) top/4px 4px
+      no-repeat,
+    conic-gradient(#0000 30%, $blue);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 4px), #000 0);
+  animation: spinerLoader2Animate 0.5s infinite linear;
+}
+@keyframes spinerLoader2Animate {
+  100% {
+    transform: rotate(1turn);
+  }
+}
